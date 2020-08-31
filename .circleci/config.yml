@@ -1,9 +1,8 @@
+orbs:
+  gcp-cli: circleci/gcp-cli@1.8.4
 version: 2.1
-jobs:
-  build:
-    docker:
-      - image: google/cloud-sdk
-    steps:
-      - run: |
-          echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
-          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+workflows:
+  install_and_configure_cli:
+    jobs:
+      - gcp-cli/install_and_initialize_cli:
+          executor: gcp-cli/default
