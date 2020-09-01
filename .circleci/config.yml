@@ -19,11 +19,4 @@ jobs:
           name: submit training jobs
           command: |
             TIMESTAMP=`date "+%Y-%m-%dt%H%M"`
-            gcloud ai-platform jobs submit training christineoo_${TIMESTAMP} \
-              --job-dir gs://${GCS_BUCKET_NAME}/christineoo_${TIMESTAMP} \
-              --runtime-version 2.1 \
-              --python-version 3.7 \
-              --module-name trainer.task \
-              --package-path trainer/ \
-              --region ${GOOGLE_COMPUTE_ZONE}
-            bash ./job_status.sh ${GOOGLE_PROJECT_ID} christineoo_${TIMESTAMP}
+            echo ${TIMESTAMP}
