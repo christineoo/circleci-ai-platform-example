@@ -15,7 +15,7 @@ jobs:
       - run:
           name: submit training jobs
           command: |
-            gcloud ai-platform jobs submit training christineoo_test \
+            gcloud ai-platform jobs submit training christineoo_test1 \
               --job-dir gs://${GCS_BUCKET_NAME}/christineoo_test \
               --runtime-version 2.1 \
               --python-version 3.7 \
@@ -26,4 +26,4 @@ jobs:
       - run:
           name: check job status
           command: |
-              bash ./job_status.sh ${GOOGLE_PROJECT_ID} christineoo_test
+              bash ./job_status.sh ${GOOGLE_PROJECT_ID} christineoo_test1
