@@ -3,6 +3,7 @@ jobs:
   build:
     docker:
       - image: google/cloud-sdk
+    working_directory: ~/circleci-ai-platform-example
     steps:
       - run: |
           echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
