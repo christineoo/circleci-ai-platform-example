@@ -2,6 +2,7 @@ version: 2.1
 orbs:
   jq: circleci/jq@1.9.0
 jobs:
+  trigger-ai-platform:
   build:
     docker:
       - image: google/cloud-sdk
@@ -34,7 +35,7 @@ jobs:
 workflows:
   build:
     jobs:
-      - deploy:
+      - trigger-ai-platform:
           filters:
             branches:
               only: /master/ai-platform\/.*/
