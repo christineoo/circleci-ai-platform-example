@@ -30,3 +30,11 @@ jobs:
               --package-path trainer/ \
               --region ${GOOGLE_COMPUTE_ZONE}
             bash ./job_status.sh ${GOOGLE_PROJECT_ID} ${JOB_ID}
+
+workflows:
+  build:
+    jobs:
+      - deploy:
+          filters:
+            branches:
+              only: /master/ai-platform\/.*/
