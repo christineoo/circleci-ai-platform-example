@@ -22,3 +22,8 @@ jobs:
               --module-name trainer.task \
               --package-path trainer/ \
               --region ${GOOGLE_COMPUTE_ZONE}
+
+      - run:
+          name: check job status
+          command: |
+              bash ./job_status.sh ${GOOGLE_PROJECT_ID} christineoo_test
