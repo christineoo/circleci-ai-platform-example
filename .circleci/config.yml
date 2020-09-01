@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  jq: circleci/jq@1.9.0
 jobs:
   build:
     docker:
@@ -6,6 +8,7 @@ jobs:
     working_directory: ~/circleci-ai-platform-example
     steps:
       - checkout
+      - jq/install
       - run: |
           echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
           gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
@@ -15,7 +18,7 @@ jobs:
       - run:
           name: submit training jobs
           command: |
-            gcloud ai-platform jobs submit training christineoo_test1 \
+            gcloud ai-platform jobs submit training christineoo_test2 \
               --job-dir gs://${GCS_BUCKET_NAME}/christineoo_test \
               --runtime-version 2.1 \
               --python-version 3.7 \
@@ -26,4 +29,4 @@ jobs:
       - run:
           name: check job status
           command: |
-              bash ./job_status.sh ${GOOGLE_PROJECT_ID} christineoo_test1
+              bash ./job_status.sh ${GOOGLE_PROJECT_ID} christineoo_test2
