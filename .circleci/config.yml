@@ -3,7 +3,6 @@ orbs:
   jq: circleci/jq@1.9.0
 jobs:
   trigger-ai-platform:
-  build:
     docker:
       - image: google/cloud-sdk
     working_directory: ~/circleci-ai-platform-example
