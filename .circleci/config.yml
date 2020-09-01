@@ -37,4 +37,4 @@ workflows:
       - build:
           filters:
             branches:
-              only: /master/ai-platform\/.*/
+              only: /ai-platform\/.*/
