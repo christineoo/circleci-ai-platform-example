@@ -2,10 +2,8 @@ version: 2.1
 orbs:
   jq: circleci/jq@1.9.0
 jobs:
+  trigger-ai-platform:
   build:
-    filters:
-      branches:
-        only: /master/ai-platform\/.*/
     docker:
       - image: google/cloud-sdk
     working_directory: ~/circleci-ai-platform-example
@@ -33,3 +31,11 @@ jobs:
               --package-path trainer/ \
               --region ${GOOGLE_COMPUTE_ZONE}
             bash ./job_status.sh ${GOOGLE_PROJECT_ID} ${JOB_ID}
+
+workflows:
+  build:
+    jobs:
+      - trigger-ai-platform:
+          filters:
+            branches:
+              only: /master/ai-platform\/.*/
