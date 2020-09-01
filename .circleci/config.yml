@@ -9,3 +9,14 @@ jobs:
           gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
           gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
           gcloud ai-platform jobs list
+
+      - run:
+          name: submit training jobs
+          command: |
+            gcloud ai-platform jobs submit training christineoo_test \
+              --job-dir gs://${GCS_BUCKET_NAME}/christineoo_test \
+              --runtime-version 2.1 \
+              --python-version 3.7 \
+              --module-name trainer.task \
+              --package-path trainer/ \
+              --region ${GOOGLE_COMPUTE_ZONE}
