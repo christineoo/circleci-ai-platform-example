@@ -3,34 +3,34 @@ orbs:
   jq: circleci/jq@1.9.0
 jobs:
   trigger-ai-platform:
-  build:
-    docker:
-      - image: google/cloud-sdk
-    working_directory: ~/circleci-ai-platform-example
-    steps:
-      - checkout
-      - jq/install
-      - run: |
-          echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
-          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-          gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
-          gcloud ai-platform jobs list
+    build:
+      docker:
+        - image: google/cloud-sdk
+      working_directory: ~/circleci-ai-platform-example
+      steps:
+        - checkout
+        - jq/install
+        - run: |
+            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+            gcloud ai-platform jobs list
 
-      - run:
-          name: submit training jobs
-          command: |
-            TIMESTAMP=`date "+%Y%m%d%H%M%S"`
-            JOB_ID=christineoo_${TIMESTAMP}
-            echo ${TIMESTAMP}
-            echo ${JOB_ID}
-            gcloud ai-platform jobs submit training ${JOB_ID} \
-              --job-dir gs://${GCS_BUCKET_NAME}/${JOB_ID} \
-              --runtime-version 2.1 \
-              --python-version 3.7 \
-              --module-name trainer.task \
-              --package-path trainer/ \
-              --region ${GOOGLE_COMPUTE_ZONE}
-            bash ./job_status.sh ${GOOGLE_PROJECT_ID} ${JOB_ID}
+        - run:
+            name: submit training jobs
+            command: |
+              TIMESTAMP=`date "+%Y%m%d%H%M%S"`
+              JOB_ID=christineoo_${TIMESTAMP}
+              echo ${TIMESTAMP}
+              echo ${JOB_ID}
+              gcloud ai-platform jobs submit training ${JOB_ID} \
+                --job-dir gs://${GCS_BUCKET_NAME}/${JOB_ID} \
+                --runtime-version 2.1 \
+                --python-version 3.7 \
+                --module-name trainer.task \
+                --package-path trainer/ \
+                --region ${GOOGLE_COMPUTE_ZONE}
+              bash ./job_status.sh ${GOOGLE_PROJECT_ID} ${JOB_ID}
 
 workflows:
   build:
