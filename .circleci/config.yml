@@ -19,11 +19,11 @@ jobs:
           name: submit training jobs
           command: |
             TIMESTAMP=`date "+%Y%m%d_%H%M%S"`
-            JOB_ID=christineoo_${TIMESTAMP}
+            JOB_NAME=christineoo_${TIMESTAMP}
             echo ${TIMESTAMP}
             echo ${JOB_ID}
-            make gcs_bucket_name=${GCS_BUCKET_NAME} job_name=${JOB_ID} submit_job
-            bash ./job_status.sh ${GOOGLE_PROJECT_ID} ${JOB_ID}
+            make gcs_bucket_name=${GCS_BUCKET_NAME} job_name=${JOB_NAME} submit_job
+            bash ./job_status.sh ${GOOGLE_PROJECT_ID} ${JOB_NAME}
 
 workflows:
   build:
