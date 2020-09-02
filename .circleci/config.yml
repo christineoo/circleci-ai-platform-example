@@ -18,17 +18,11 @@ jobs:
       - run:
           name: submit training jobs
           command: |
-            TIMESTAMP=`date "+%Y%m%d%H%M%S"`
+            TIMESTAMP=`date "+%Y%m%d_%H%M%S"`
             JOB_ID=christineoo_${TIMESTAMP}
             echo ${TIMESTAMP}
             echo ${JOB_ID}
-            gcloud ai-platform jobs submit training ${JOB_ID} \
-              --job-dir gs://${GCS_BUCKET_NAME}/${JOB_ID} \
-              --runtime-version 2.1 \
-              --python-version 3.7 \
-              --module-name trainer.task \
-              --package-path trainer/ \
-              --region ${GOOGLE_COMPUTE_ZONE}
+            make gcs_bucket_name=${GCS_BUCKET_NAME} job_name=${JOB_ID} submit_job
             bash ./job_status.sh ${GOOGLE_PROJECT_ID} ${JOB_ID}
 
 workflows:
