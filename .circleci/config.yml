@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   jq: circleci/jq@1.9.0
 jobs:
-  build:
+  trigger-training-job:
     docker:
       - image: google/cloud-sdk
     working_directory: ~/circleci-ai-platform-example
@@ -18,23 +18,17 @@ jobs:
       - run:
           name: submit training jobs
           command: |
-            TIMESTAMP=`date "+%Y%m%d%H%M%S"`
-            JOB_ID=christineoo_${TIMESTAMP}
+            TIMESTAMP=`date "+%Y%m%d_%H%M%S"`
+            JOB_NAME=christineoo_${TIMESTAMP}
             echo ${TIMESTAMP}
             echo ${JOB_ID}
-            gcloud ai-platform jobs submit training ${JOB_ID} \
-              --job-dir gs://${GCS_BUCKET_NAME}/${JOB_ID} \
-              --runtime-version 2.1 \
-              --python-version 3.7 \
-              --module-name trainer.task \
-              --package-path trainer/ \
-              --region ${GOOGLE_COMPUTE_ZONE}
-            bash ./job_status.sh ${GOOGLE_PROJECT_ID} ${JOB_ID}
+            make gcs_bucket_name=${GCS_BUCKET_NAME} job_name=${JOB_NAME} submit_job
+            bash ./job_status.sh ${GOOGLE_PROJECT_ID} ${JOB_NAME}
 
 workflows:
   build:
     jobs:
-      - build:
+      - trigger-training-job:
           filters:
             branches:
               only: /ai-platform\/.*/
