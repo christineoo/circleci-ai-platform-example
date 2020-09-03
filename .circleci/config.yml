@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   jq: circleci/jq@1.9.0
 jobs:
-  setup:
+  setup-environment:
     docker:
       - image: circleci/python:3.8.0
     working_directory: ~/circleci-ai-platform-example
@@ -43,7 +43,7 @@ jobs:
 workflows:
   build:
     jobs:
-      - setup_and_trigger-training-job:
+      - setup-environment_and_trigger-training-job:
           filters:
             branches:
               only: /ai-platform\/.*/
