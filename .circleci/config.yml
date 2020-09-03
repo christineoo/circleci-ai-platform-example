@@ -25,10 +25,6 @@ jobs:
           gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
           gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
           gcloud ai-platform jobs list
-      - run: |
-          name: Install Dependencies
-          command: |
-            which python
 
       - run:
           name: submit training jobs
@@ -43,6 +39,10 @@ jobs:
 workflows:
   build:
     jobs:
+      - setup-environment:
+        filters:
+          branches:
+            only: /ai-platform\/.*
       - trigger-training-job:
           filters:
             branches:
