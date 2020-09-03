@@ -17,7 +17,7 @@ jobs:
       - run: |
           name: Install Dependencies
           command: |
-            poetry install
+            which python
 
       - run:
           name: submit training jobs
