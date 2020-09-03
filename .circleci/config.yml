@@ -44,6 +44,8 @@ workflows:
           branches:
             only: /ai-platform\/.*
       - trigger-training-job:
+          requires:
+            - setup-environment
           filters:
             branches:
               only: /ai-platform\/.*/
