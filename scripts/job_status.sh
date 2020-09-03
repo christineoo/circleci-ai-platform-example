@@ -15,7 +15,7 @@ do
     break
   elif [ "$state" == "$failed_state" ]; then
     echo "Job failed! Please check the logs!"
-    break
+    exit 1
   else
     echo "Got $state :( Not done yet..."
   fi
