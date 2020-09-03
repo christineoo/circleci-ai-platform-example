@@ -43,7 +43,7 @@ jobs:
 workflows:
   build:
     jobs:
-      - setup-environment_and_trigger-training-job:
+      - trigger-training-job:
           filters:
             branches:
               only: /ai-platform\/.*/
