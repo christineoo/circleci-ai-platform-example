@@ -12,6 +12,7 @@ jobs:
           name: Install Python Dependencies
           command: |
             cd temp
+            poetry config virtualenvs.in-project true
             poetry install
             poetry config --list
 
