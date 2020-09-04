@@ -12,6 +12,7 @@ jobs:
           name: Install Python Dependencies
           command: |
             poetry install
+            poetry config --list
 
   trigger-training-job:
     docker:
