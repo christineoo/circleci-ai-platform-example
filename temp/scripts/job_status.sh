@@ -1,6 +1,7 @@
 SECONDS=0
 TIMEOUT=3600
 expected_state='"SUCCEEDED"'
+failed_state='"FAILED"'
 auth_token="$(gcloud auth print-access-token)"
 state=$(curl -X GET \
 	-H "Content-Type: application/json" \
@@ -12,6 +13,9 @@ do
   if [ "$state" == "$expected_state" ]; then
     echo "Job succeeded! All done!"
     break
+  elif [ "$state" == "$failed_state" ]; then
+    echo "Job failed! Please check the logs!"
+    exit 1
   else
     echo "Got $state :( Not done yet..."
   fi
