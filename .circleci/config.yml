@@ -5,13 +5,13 @@ jobs:
   setup-environment:
     docker:
       - image: circleci/python:3.7.9
-    working_directory: ~/circleci-ai-platform-example
+    working_directory: ~/circleci-ai-platform-example/temp
     steps:
-      - checkout
+      - checkout:
+          path: ~/circleci-ai-platform-example
       - run:
           name: Install Python Dependencies
           command: |
-            cd temp
             poetry config virtualenvs.in-project true
             poetry install
             poetry config --list
@@ -19,9 +19,10 @@ jobs:
   trigger-training-job:
     docker:
       - image: google/cloud-sdk
-    working_directory: ~/circleci-ai-platform-example
+    working_directory: ~/circleci-ai-platform-example/temp
     steps:
-      - checkout
+      - checkout:
+          path: ~/circleci-ai-platform-example
       - jq/install
       - run: |
           echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
@@ -32,7 +33,6 @@ jobs:
       - run:
           name: submit training jobs
           command: |
-            cd temp
             TIMESTAMP=`date "+%Y%m%d_%H%M%S"`
             JOB_NAME=christineoo_${TIMESTAMP}
             echo ${TIMESTAMP}
