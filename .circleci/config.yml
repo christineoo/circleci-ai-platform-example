@@ -5,16 +5,22 @@ jobs:
   setup-environment:
     docker:
       - image: circleci/python:3.7.9
+      - image: google/cloud-sdk
     working_directory: ~/circleci-ai-platform-example/temp
     steps:
       - checkout:
           path: ~/circleci-ai-platform-example
+      - jq/install
       - run:
           name: Install Python Dependencies
           command: |
-            poetry config virtualenvs.in-project true
             poetry install
             poetry config --list
+      - run: |
+          echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+          gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+          gcloud ai-platform jobs list
 
   trigger-training-job:
     docker:
@@ -47,9 +53,3 @@ workflows:
         filters:
           branches:
             only: /ai-platform\/.*
-      - trigger-training-job:
-          requires:
-            - setup-environment
-          filters:
-            branches:
-              only: /ai-platform\/.*/
