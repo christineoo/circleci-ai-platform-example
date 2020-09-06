@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   jq: circleci/jq@1.9.0
-  gcp-cli: circleci/gcp-cli@1.0.0
+  gcp-cli: circleci/gcp-cli@1.8.4
 jobs:
   setup-environment:
     docker:
@@ -11,6 +11,8 @@ jobs:
       - checkout:
           path: ~/circleci-ai-platform-example
       - jq/install
+      - gcp-cli/install
+      - gcp-cli/initialize
       - run:
           name: Install Python Dependencies
           command: |
@@ -47,14 +49,9 @@ jobs:
             bash scripts/job_status.sh ${GOOGLE_PROJECT_ID} ${JOB_NAME}
 
 workflows:
-  install_and_configure_cli:
-    jobs:
-      - gcp-cli/install_and_initialize_cli
   build:
     jobs:
       - setup-environment:
-        requires:
-          - install_and_configure_cli
         filters:
           branches:
             only: /ai-platform\/.*
