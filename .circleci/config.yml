@@ -53,6 +53,8 @@ workflows:
   build:
     jobs:
       - setup-environment:
+        requires:
+          - install_and_configure_cli
         filters:
           branches:
             only: /ai-platform\/.*
