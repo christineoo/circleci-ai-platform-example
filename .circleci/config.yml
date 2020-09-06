@@ -47,6 +47,9 @@ jobs:
             bash scripts/job_status.sh ${GOOGLE_PROJECT_ID} ${JOB_NAME}
 
 workflows:
+  install_and_configure_cli:
+    jobs:
+      - gcp-cli/install_and_initialize_cli
   build:
     jobs:
       - setup-environment:
