@@ -24,6 +24,15 @@ jobs:
           gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
           gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
           gcloud ai-platform jobs list
+      - run:
+          name: submit training jobs
+          command: |
+            TIMESTAMP=`date "+%Y%m%d_%H%M%S"`
+            JOB_NAME=christineoo_${TIMESTAMP}
+            echo ${TIMESTAMP}
+            echo ${JOB_ID}
+            make gcs_bucket_name=${GCS_BUCKET_NAME} job_name=${JOB_NAME} submit_job
+            bash scripts/job_status.sh ${GOOGLE_PROJECT_ID} ${JOB_NAME}
 
   trigger-training-job:
     docker:
