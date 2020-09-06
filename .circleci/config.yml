@@ -1,11 +1,11 @@
 version: 2.1
 orbs:
   jq: circleci/jq@1.9.0
+  gcp-cli: circleci/gcp-cli@1.0.0
 jobs:
   setup-environment:
     docker:
       - image: circleci/python:3.7.9
-      - image: google/cloud-sdk
     working_directory: ~/circleci-ai-platform-example/temp
     steps:
       - checkout:
