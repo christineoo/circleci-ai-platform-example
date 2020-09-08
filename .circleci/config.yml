@@ -1,13 +1,47 @@
 version: 2.1
 orbs:
   jq: circleci/jq@1.9.0
+  gcp-cli: circleci/gcp-cli@1.8.4
 jobs:
-  build:
+  setup-environment:
+    docker:
+      - image: circleci/python:3.7.9
+    working_directory: ~/circleci-ai-platform-example/temp
+    steps:
+      - checkout:
+          path: ~/circleci-ai-platform-example
+      - jq/install
+      - gcp-cli/install
+      - gcp-cli/initialize
+      - run:
+          name: Install Python Dependencies
+          command: |
+            poetry install
+            poetry config --list
+      - run:
+          name: submit training jobs
+          environment:
+            TRAINER_PACKAGE_PATH: trainer/
+            MAIN_TRAINER_MODULE: trainer.task
+            REGION: asia-northeast1
+          command: |
+            TIMESTAMP=`date "+%Y%m%d_%H%M%S"`
+            JOB_NAME=christineoo_${TIMESTAMP}
+            echo ${TIMESTAMP}
+            echo ${JOB_ID}
+            echo ${MAIN_TRAINER_MODULE}
+            echo ${TRAINER_PACKAGE_PATH}
+            echo ${REGION}
+            make gcs_bucket_name=${GCS_BUCKET_NAME} job_name=${JOB_NAME} submit_job
+            bash scripts/job_status.sh ${GOOGLE_PROJECT_ID} ${JOB_NAME}
+
+  trigger-training-job:
     docker:
       - image: google/cloud-sdk
-    working_directory: ~/circleci-ai-platform-example
+    working_directory: ~/circleci-ai-platform-example/temp
     steps:
-      - checkout
+      - checkout:
+          path: ~/circleci-ai-platform-example
       - jq/install
       - run: |
           echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
@@ -18,23 +52,17 @@ jobs:
       - run:
           name: submit training jobs
           command: |
-            TIMESTAMP=`date "+%Y%m%d%H%M%S"`
-            JOB_ID=christineoo_${TIMESTAMP}
+            TIMESTAMP=`date "+%Y%m%d_%H%M%S"`
+            JOB_NAME=christineoo_${TIMESTAMP}
             echo ${TIMESTAMP}
             echo ${JOB_ID}
-            gcloud ai-platform jobs submit training ${JOB_ID} \
-              --job-dir gs://${GCS_BUCKET_NAME}/${JOB_ID} \
-              --runtime-version 2.1 \
-              --python-version 3.7 \
-              --module-name trainer.task \
-              --package-path trainer/ \
-              --region ${GOOGLE_COMPUTE_ZONE}
-            bash ./job_status.sh ${GOOGLE_PROJECT_ID} ${JOB_ID}
+            make gcs_bucket_name=${GCS_BUCKET_NAME} job_name=${JOB_NAME} submit_job
+            bash scripts/job_status.sh ${GOOGLE_PROJECT_ID} ${JOB_NAME}
 
 workflows:
   build:
     jobs:
-      - build:
-          filters:
-            branches:
-              only: /ai-platform\/.*/
+      - setup-environment:
+        filters:
+          branches:
+            only: /ai-platform\/.*
