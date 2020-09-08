@@ -2,8 +2,6 @@
 
 .DEFAULT_GOAL := help
 
-include .env
-
 # JOB_ID=christineoo_test
 # JOB_NAME=${JOB_ID}_$(shell date +%Y%m%d%H%M%S)
 
