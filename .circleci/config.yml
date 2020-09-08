@@ -18,8 +18,21 @@ jobs:
           command: |
             poetry install
             poetry config --list
-      - run: |
-          gcloud ai-platform jobs list
+      - run:
+          name: submit training jobs
+          environment:
+            TRAINER_PACKAGE_PATH: trainer/
+            MAIN_TRAINER_MODULE: trainer.task
+            REGION: asia-northeast1
+          command: |
+            TIMESTAMP=`date "+%Y%m%d_%H%M%S"`
+            JOB_NAME=christineoo_${TIMESTAMP}
+            echo ${TIMESTAMP}
+            echo ${JOB_ID}
+            echo ${MAIN_TRAINER_MODULE}
+            echo ${TRAINER_PACKAGE_PATH}
+            echo ${REGION}
+
 
   trigger-training-job:
     docker:
