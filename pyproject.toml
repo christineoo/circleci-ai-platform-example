@@ -8,6 +8,7 @@ include = ["MANIFEST.in"]
 [tool.poetry.dependencies]
 python = "^3.7"
 pandas = "^1.1.1"
+google-api-python-client = "^1.10.0"
 
 [tool.poetry.dev-dependencies]
 
