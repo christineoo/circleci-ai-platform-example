@@ -16,8 +16,6 @@ jobs:
             poetry config --list
 
   trigger-training-job:
-    docker:
-      - image: google/cloud-sdk
     working_directory: ~/circleci-ai-platform-example
     steps:
       - checkout
