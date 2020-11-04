@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   jq: circleci/jq@1.9.0
-  gcp-cli: circleci/gcp-cli@1.8.4
+  gcp-cli: circleci/gcp-cli@2.1.0
 jobs:
   trigger-training-job:
     docker:
