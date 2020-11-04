@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   jq: circleci/jq@1.9.0
+  gcp-cli: circleci/gcp-cli@1.8.4
 jobs:
   setup-environment:
     docker:
@@ -21,10 +22,9 @@ jobs:
     steps:
       - checkout
       - jq/install
+      - gcp-cli/install
+      - gcp-cli/initialize
       - run: |
-          echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
-          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-          gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
           gcloud --version
 
       - run:
